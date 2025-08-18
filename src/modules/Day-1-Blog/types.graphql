@@ -1,6 +1,7 @@
 type User {
   id: ID!
   name: String!
+  email:String!
   posts: [Post!]!
   comments: [Comment!]!
 }
@@ -20,4 +21,9 @@ type Comment {
   text: String!
   post: Post!
   user: User!
+}
+
+enum sortOrder{
+  ASC
+  DESC
 }

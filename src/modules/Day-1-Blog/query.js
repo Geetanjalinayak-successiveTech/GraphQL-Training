@@ -3,22 +3,39 @@ import { posts } from "./dataSource.js";
 export const blogQueryResolvers = {
   getUsers: () => users,
 
-  getUserById: (_,{id}) => users.find((user) => user.id === id),
+  getUserById: (_, { id }) => users.find((user) => user.id === id),
 
   getPosts: () => posts,
 
-  getPostById: (_,{id}) => posts.find((post) => post.id === id),
+  getPostById: (_, { id }) => posts.find((post) => post.id === id),
 
-  getPostsByUserId: (_,{userId}) =>
+  getPostsByUserId: (_, { userId }) =>
     posts.filter((post) => post.authorId === userId),
 
   getComments: () => comments,
 
-  getCommentsByPostId: (_,{postId}) =>
+  getCommentsByPostId: (_, { postId }) =>
     comments.filter((comment) => comment.postId === postId),
 
-  getUserByComment: (_,{comment}) =>
+  getUserByComment: (_, { comment }) =>
     users.find((user) => user.id === comment.userId),
 
-  getAuthorOfPost: (_,{post}) => users.find((user) => user.id === post.authorId),
+  getAuthorOfPost: (_, { post }) =>
+    users.find((user) => user.id === post.authorId),
+
+  paginatedPosts: (_, {page, limit, sortOrder = "ASC"}) => {
+
+        if(page < 1 || limit < 1){
+            throw new Error('Invalid page or limit'); 
+        }
+
+        const sorted = [...posts].sort((a,b)=> {
+            const idA = parseInt(a.id); 
+            const idB = parseInt(b.id); 
+            return sortOrder === 'DESC'? idB - idA : idA - idB; 
+        }); 
+        const skip = (page - 1) * limit; 
+        return sorted.slice(skip, skip + limit); 
+    }
+
 };

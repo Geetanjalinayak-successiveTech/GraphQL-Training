@@ -1,6 +1,6 @@
 type Query {
-     messages: [Message!]!
-     getUsers: [User!]!
+  messages: [Message!]!
+  getUsers: [User!]!
   getUserById(id: ID!): User
   getPosts: [Post!]!
   getPostById(id: ID!): Post
@@ -9,11 +9,17 @@ type Query {
   getCommentsByPostId(postId: ID!): [Comment!]!
   getUserByComment(comment: CommentInput!): User
   getAuthorOfPost(post: PostInput!): User
+  paginatedPosts(page: Int!, limit: Int!, sortOrder: sortOrder): [Post!]! 
+ 
+
 }
 
 type Mutation {
-    postMessage(content: String!, author: String!, title: String!): Message!
-    createPost(title: String!, content: String!, authorId: ID!): Post!
+  postMessage(content: String!, author: String!, title: String!): Message!
+  createPost(title: String!, content: String!, authorId: ID!): Post!
+  updateUser(id: ID!, name: String, email: String!): User!
+  deleteComment(id: ID!): Comment!
+  createComment(text:String!,postId:ID!):Comment!
 }
 
 input CommentInput {

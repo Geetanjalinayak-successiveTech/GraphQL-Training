@@ -1,7 +1,8 @@
 import { messages } from "./dataSource.js";
 
 export const messageMutationResolvers = {
-  postMessage: (_, { content, author }) => {
+  postMessage: async (_, { content, author }) => {
+    await new Promise((resolve)=> setTimeout(resolve),2000);
     const newMessage = {
       id: String(messages.length + 1),
       content,
