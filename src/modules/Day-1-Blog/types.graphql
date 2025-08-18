@@ -22,3 +22,8 @@ type Comment {
   post: Post!
   user: User!
 }
+
+enum sortOrder{
+  ASC
+  DESC
+}
