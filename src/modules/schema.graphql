@@ -12,6 +12,10 @@ type Query {
   paginatedPosts(page: Int!, limit: Int!, sortOrder: sortOrder): [Post!]! 
   users: [User!]!
   usersByID (id:ID!): User!
+  chats:Chat!
+  
+  
+
  
 
 }
@@ -33,6 +37,14 @@ type Mutation {
   registerUser(name:String!, email:String!, age:Int!,password:String!):User!
   loginUser(email:String!, password:String!):authPayload!
   deleteUSer(id:ID!):User!
+  sendMessage(content:String!, sender:String!):Chat!
+  setUserOnline(_id:ID!):User!
+  setUserOffline(_id:ID!):User!
+}
+
+type Subscription {
+  messageSent:Chat!
+  userStatusChanged:User!
 }
 
 

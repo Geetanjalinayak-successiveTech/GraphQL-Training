@@ -1,18 +1,25 @@
 import { blogModule } from "../modules/Day-1-Blog/index.js";
 import { messageModule } from "../modules/message/index.js";
 import { userModule } from "../modules/user/index.js";
+import { chatModule } from "../modules/chat/index.js";
 
 export const resolvers = {
   Query: {
     ...blogModule.Query,
     ...messageModule.query,
     ...userModule.query,
+    ...chatModule.query
   },
   Mutation: {
     ...blogModule.Mutation,
     ...messageModule.mutaion,
     ...userModule.mutation,
+    ...chatModule.mutation
   },
+  Subscription: {
+    ...chatModule.subscription
+  },
+  
    User: {
     posts: (parent) => {
       return posts.filter(post => post.authorId === parent.id);
