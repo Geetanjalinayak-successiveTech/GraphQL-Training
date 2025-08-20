@@ -5,6 +5,9 @@ export const userQueryResolvers = {
     if (!context.user) {
       throw new Error("Unauthorized");
     }
+    if (context.user.role !== "ADMIN")
+      throw new Error("Forbidden: Admins only");   // Role based acess control
+
     return userModel.find();
   },
 
@@ -19,4 +22,3 @@ export const userQueryResolvers = {
     return user;
   },
 };
-

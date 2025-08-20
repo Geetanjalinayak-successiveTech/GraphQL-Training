@@ -32,6 +32,7 @@ type Mutation {
   updateUserByDb(_id:ID!, name:String!, email:String!, age:Int!):User!
   registerUser(name:String!, email:String!, age:Int!,password:String!):User!
   loginUser(email:String!, password:String!):authPayload!
+  deleteUSer(id:ID!):User!
 }
 
 
