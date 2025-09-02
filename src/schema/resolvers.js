@@ -1,14 +1,17 @@
 import { blogModule } from "../modules/Day-1-Blog/index.js";
 import { messageModule } from "../modules/message/index.js";
+import { userModule } from "../modules/user/index.js";
 
 export const resolvers = {
   Query: {
     ...blogModule.Query,
     ...messageModule.query,
+    ...userModule.query,
   },
   Mutation: {
     ...blogModule.Mutation,
-    ...messageModule.mutaion
+    ...messageModule.mutaion,
+    ...userModule.mutation,
   },
    User: {
     posts: (parent) => {

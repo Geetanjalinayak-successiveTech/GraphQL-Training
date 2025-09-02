@@ -1,7 +1,7 @@
 type Query {
   messages: [Message!]!
   getUsers: [User!]!
-  getUserById(id: ID!): User
+  getUserById(id: ID!): User!
   getPosts: [Post!]!
   getPostById(id: ID!): Post
   getPostsByUserId(userId: ID!): [Post!]!
@@ -10,9 +10,17 @@ type Query {
   getUserByComment(comment: CommentInput!): User
   getAuthorOfPost(post: PostInput!): User
   paginatedPosts(page: Int!, limit: Int!, sortOrder: sortOrder): [Post!]! 
+  users: [User!]!
+  usersByID (id:ID!): User!
  
 
 }
+type authPayload {
+  token: String!
+  user: User!
+}
+
+
 
 type Mutation {
   postMessage(content: String!, author: String!, title: String!): Message!
@@ -20,7 +28,13 @@ type Mutation {
   updateUser(id: ID!, name: String, email: String!): User!
   deleteComment(id: ID!): Comment!
   createComment(text:String!,postId:ID!):Comment!
+  createUser(name:String!, email:String!, age:Int!):User!
+  updateUserByDb(_id:ID!, name:String!, email:String!, age:Int!):User!
+  registerUser(name:String!, email:String!, age:Int!,password:String!):User!
+  loginUser(email:String!, password:String!):authPayload!
+  deleteUSer(id:ID!, adminID:ID!):User!
 }
+
 
 input CommentInput {
   id: ID!
