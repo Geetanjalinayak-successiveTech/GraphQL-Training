@@ -54,12 +54,13 @@ export const userMutationResolvers = {
     return { token, user };
   },
 
-  deleteUSer: async (_, { id }) => {
-    const user = await userModel.findOne({ id });
+  deleteUSer: async (_, { id }, { adminID}) => {
+    const user = await userModel.findById(id);
     if (!user) {
       throw new Error("User not found");
     }
-    if (user.role !== "admin") {
+    const admin = await userModel.findById(adminID);
+    if (admin.role !== "admin") {
       // role based acess
       throw new Error("Unauthorized");
     }
