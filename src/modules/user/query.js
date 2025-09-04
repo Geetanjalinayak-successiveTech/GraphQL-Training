@@ -8,7 +8,7 @@ export const userQueryResolvers = {
     if (context.user.role !== "ADMIN")
       throw new Error("Forbidden: Admins only");   // Role based acess control
 
-    return userModel.find();
+    return await  userModel.find();
   },
 
   usersByID: async (_, { id }, context) => {

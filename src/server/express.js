@@ -1,4 +1,3 @@
-
 import express from "express";
 import http from "http";
 import { ApolloServer } from "@apollo/server";
@@ -11,12 +10,11 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/use/ws";
 
-import { pubsub } from "./pubsub.js"; // Import the pubsub instance
+import pubsub from "./pubsub.js"; // Import the pubsub instance
 
 import { typeDefs } from "../schema/typeDefs.js";
 import { resolvers } from "../schema/resolvers.js";
-
-
+import { verifyToken } from "../utils/auth.js";
 
 export async function createExpressServer() {
   const app = express();
@@ -41,10 +39,25 @@ export async function createExpressServer() {
     cors(),
     express.json(),
     expressMiddleware(server, {
-      context: async () => ({ pubsub }),
+      context: async ({ req }) => {
+        const token = req.headers.authorization || "";
+        let user = null;
+        if (token.startsWith("Bearer ")) {
+          token = token.slice(7); 
+        }
+
+        if (token) {
+          try {
+            user = verifyToken(token);
+          } catch (err) {
+            console.error("Invalid token:", err.message);
+          }
+        }
+
+        return { user, pubsub }; // 👈 auth + pubsub in context
+      },
     })
   );
-
   // WebSocket server for subscriptions
   const wsServer = new WebSocketServer({
     server: httpServer,

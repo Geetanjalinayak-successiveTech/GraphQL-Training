@@ -1,38 +1,15 @@
-// index.js
-import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
-import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
-import { typeDefs } from "./src/schema/typeDefs.js";
-import { resolvers } from "./src/schema/resolvers.js";
+import { createApolloServer } from "./src/server/express.js";
 import { ConnectDB } from "./src/config/dbConnect.js";
-import { verifyToken } from "./src/utils/auth.js";
+import { SERVER_CONFIG } from "./src/config/serverConfig.js";
 
-ConnectDB();
+const PORT = SERVER_CONFIG.PORT;
+async function start() {
+  await ConnectDB();
+  const httpServer = await createApolloServer();
+  httpServer.listen(PORT, () => {
+    console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
+    console.log(`🔄 Subscriptions ready at ws://localhost:${PORT}/graphql`);
+  });
+}
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  plugins: [ApolloServerPluginLandingPageLocalDefault()],
-  context: async ({ req }) => {
-    const token = req.headers.authorization || "";
-    let user = null;
-
-    
-
-    if (token) {
-      try {
-        user = verifyToken(token);
-      } catch (error) {
-        console.error("Token verification failed:", error);
-      }
-    }
-
-    return { user };
-  }
-});
-
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
-
-console.log(`🚀 Server ready at ${url}`);
+start(); 
